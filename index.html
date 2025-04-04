@@ -5,26 +5,40 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>이응제작쏘</title>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
     html, body {
-      font-family: 'Noto Sans KR', sans-serif;
-      height: 100vh;
+      height: 100%;
       overflow: hidden;
+      font-family: 'Noto Sans KR', sans-serif;
+    }
+
+    /* 스크롤 컨테이너 */
+    .scroll-container {
+      height: 100vh;
+      overflow-y: scroll;
+      scroll-snap-type: y mandatory;
       scroll-behavior: smooth;
     }
+
+    /* 각 섹션 */
     section {
       width: 100vw;
       height: 100vh;
-      display: none;
+      scroll-snap-align: start;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
     /* 인트로 */
     .intro {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
       background: linear-gradient(135deg, #ffd6e0, #fff5f8);
+      flex-direction: column;
+      text-align: center;
     }
     .intro h1 {
       font-size: 3rem;
@@ -35,13 +49,7 @@
       font-size: 1.2rem;
     }
 
-    /* 썸네일 페이지 */
-    .portfolio {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: #fff;
-    }
+    /* 썸네일 */
     .album-grid {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
@@ -57,16 +65,15 @@
       cursor: pointer;
     }
 
-    /* 상세 페이지 */
+    /* 상세 보기 */
     .gallery-page {
-      display: none;
       flex-direction: column;
       align-items: center;
-      justify-content: flex-start;
-      padding: 3rem 1rem;
+      padding: 2rem 1rem;
       background: #f9f9f9;
       overflow-y: auto;
       gap: 2rem;
+      display: none;
     }
     .gallery-photo {
       width: 66%;
@@ -89,81 +96,59 @@
 </head>
 <body>
 
-  <!-- 인트로 페이지 -->
-  <section class="intro" id="page0">
-    <h1>이응제작쏘</h1>
-    <p>자이언트 플라워 · 웨딩 데코 · 포토존</p>
-  </section>
+  <!-- 전체 스크롤 가능한 페이지 묶음 -->
+  <div class="scroll-container" id="mainContainer">
+    <!-- 인트로 -->
+    <section class="intro">
+      <div>
+        <h1>이응제작쏘</h1>
+        <p>자이언트 플라워 · 웨딩 데코 · 포토존</p>
+      </div>
+    </section>
 
-  <!-- 썸네일 페이지 (5개, 각 15개) -->
-  <section class="portfolio" id="page1"><div class="album-grid" id="grid1"></div></section>
-  <section class="portfolio" id="page2"><div class="album-grid" id="grid2"></div></section>
-  <section class="portfolio" id="page3"><div class="album-grid" id="grid3"></div></section>
-  <section class="portfolio" id="page4"><div class="album-grid" id="grid4"></div></section>
-  <section class="portfolio" id="page5"><div class="album-grid" id="grid5"></div></section>
+    <!-- 포트폴리오 (5 페이지 × 15 썸네일 = 75개) -->
+    <section class="portfolio"><div class="album-grid" id="grid1"></div></section>
+    <section class="portfolio"><div class="album-grid" id="grid2"></div></section>
+    <section class="portfolio"><div class="album-grid" id="grid3"></div></section>
+    <section class="portfolio"><div class="album-grid" id="grid4"></div></section>
+    <section class="portfolio"><div class="album-grid" id="grid5"></div></section>
+  </div>
 
-  <!-- 상세 페이지 -->
-  <section class="gallery-page" id="gallery">
-    <button class="back-btn" onclick="backToPortfolio()">← 돌아가기</button>
+  <!-- 상세 이미지 보기 (별도 레이어) -->
+  <section class="gallery-page" id="galleryPage">
+    <button class="back-btn" onclick="closeGallery()">← 돌아가기</button>
     <div id="galleryContainer"></div>
   </section>
 
   <script>
     const colors = ["#ffc1cc", "#f7d794", "#9ad0ec", "#c8e6c9", "#d1c4e9", "#ffccbc", "#b2dfdb"];
-    let currentPage = 0;
-    const totalPages = 6; // intro + 5페이지
 
-    // 썸네일 생성
-    function generateGrid(id, startIndex) {
-      const grid = document.getElementById(id);
+    // 썸네일 생성 함수
+    function generateGrid(gridId, startIndex) {
+      const grid = document.getElementById(gridId);
       for (let i = 0; i < 15; i++) {
         const div = document.createElement("div");
         div.className = "album-thumb";
         div.style.background = colors[(startIndex + i) % colors.length];
-        div.onclick = () => goToGallery(startIndex + i);
+        div.onclick = () => openGallery(startIndex + i);
         grid.appendChild(div);
       }
     }
 
-    // 페이지 초기화
+    // 75개 썸네일 생성 (5페이지에 15개씩)
     window.onload = () => {
       generateGrid("grid1", 0);
       generateGrid("grid2", 15);
       generateGrid("grid3", 30);
       generateGrid("grid4", 45);
       generateGrid("grid5", 60);
-      document.getElementById("page0").style.display = "flex";
     };
 
-    // 휠 이동 처리
-    let scrollCooldown = false;
-    window.addEventListener("wheel", (e) => {
-      if (scrollCooldown) return;
-      if (e.deltaY > 0 && currentPage < totalPages - 1) {
-        currentPage++;
-      } else if (e.deltaY < 0 && currentPage > 0) {
-        currentPage--;
-      } else return;
-      showPage(currentPage);
-      scrollCooldown = true;
-      setTimeout(() => scrollCooldown = false, 800);
-    });
-
-    // 페이지 표시
-    function showPage(index) {
-      for (let i = 0; i < totalPages; i++) {
-        document.getElementById(`page${i}`).style.display = "none";
-      }
-      document.getElementById(`page${index}`).style.display = "flex";
-    }
-
-    // 썸네일 클릭 시 상세 보기
-    function goToGallery(index) {
-      for (let i = 0; i < totalPages; i++) {
-        document.getElementById(`page${i}`).style.display = "none";
-      }
+    // 썸네일 클릭 시 상세 페이지 표시
+    function openGallery(index) {
+      const gallery = document.getElementById("galleryPage");
       const container = document.getElementById("galleryContainer");
-      container.innerHTML = "";
+      container.innerHTML = ""; // 이전 내용 제거
       for (let i = 0; i < 5; i++) {
         const color = "#" + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
         const div = document.createElement("div");
@@ -171,15 +156,15 @@
         div.style.background = color;
         container.appendChild(div);
       }
-      document.getElementById("gallery").style.display = "flex";
+      gallery.style.display = "flex";
+      document.getElementById("mainContainer").style.display = "none";
     }
 
-    // 돌아가기
-    function backToPortfolio() {
-      document.getElementById("gallery").style.display = "none";
-      document.getElementById(`page${currentPage}`).style.display = "flex";
+    // 돌아가기 버튼 클릭 시
+    function closeGallery() {
+      document.getElementById("galleryPage").style.display = "none";
+      document.getElementById("mainContainer").style.display = "block";
     }
   </script>
-
 </body>
 </html>
