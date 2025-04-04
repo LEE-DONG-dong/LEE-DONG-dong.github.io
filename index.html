@@ -15,17 +15,6 @@
       scroll-behavior: smooth;
     }
 
-    .page-container {
-      height: 100vh;
-      width: 100vw;
-      overflow: hidden;
-    }
-
-    .section-wrapper {
-      height: 100%;
-      width: 100%;
-    }
-
     .section {
       height: 100vh;
       width: 100vw;
@@ -40,204 +29,79 @@
       background: linear-gradient(135deg, #ffd6e0, #fff5f8);
       text-align: center;
     }
-
     .intro h1 {
       font-size: 3rem;
       color: #c94f7c;
     }
-
-    .portfolio {
-      background: #fff;
+    .sns-icons {
+      display: flex;
+      gap: 2rem;
+      margin-top: 2rem;
+      justify-content: center;
     }
-
-    .album-grid {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      grid-template-rows: repeat(3, 1fr);
-      width: 100vw;
-      height: 100vh;
-    }
-
-    .album-thumb {
-      width: 100%;
-      height: 100%;
-      background-size: cover;
-      background-position: center;
+    .sns-icons img {
+      width: 100px;
+      height: 100px;
       cursor: pointer;
     }
 
-    /* 팝업 */
     .modal {
       position: fixed;
       top: 0; left: 0;
       width: 100vw;
       height: 100vh;
-      background: rgba(0,0,0,0.7);
+      background: rgba(0,0,0,0.6);
       display: none;
       justify-content: center;
       align-items: center;
-      z-index: 999;
-      overflow: hidden;
-    }
-
-    .slide-wrapper {
-      position: relative;
-      width: 66%;
-      aspect-ratio: 3 / 4;
-      overflow: hidden;
-    }
-
-    .gallery-photo {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%;
-      height: 100%;
-      border-radius: 12px;
-      opacity: 0;
-      transition: opacity 0.3s ease-in-out;
-    }
-
-    .gallery-photo.active {
-      opacity: 1;
-    }
-
-    .close-btn {
-      position: fixed;
-      top: 20px;
-      right: 30px;
-      font-size: 2rem;
-      color: white;
-      background: rgba(0,0,0,0.5);
-      padding: 0.2em 0.6em;
-      border-radius: 8px;
-      cursor: pointer;
       z-index: 1000;
     }
 
-    body.modal-open {
-      overflow: hidden !important;
+    .modal img {
+      width: 300px;
+      height: 300px;
+      border-radius: 8px;
     }
   </style>
 </head>
 <body>
 
-  <div class="page-container" id="pageContainer">
-    <div class="section-wrapper" id="sectionWrapper">
-      <!-- 인트로 -->
-      <section class="section intro">
-        <div>
-          <h1>이응제작쏘</h1>
-          <p>자이언트 플라워 · 웨딩 데코 · 포토존</p>
+  <!-- 인트로 페이지 -->
+  <section class="section intro">
+    <div>
+      <h1>이응제작쏘</h1>
+      <p>자이언트 플라워 · 웨딩 데코 · 포토존</p>
+      <div class="sns-icons">
+        <!-- 인스타그램 -->
+        <a href="https://www.instagram.com/ololo.jejaksso/" target="_blank">
+          <img src="https://github.com/user-attachments/assets/ecc21de4-9bd2-4821-b400-183c24e8a802" alt="Instagram" />
+        </a>
+        <!-- 네이버 스토어 -->
+        <a href="https://naver.me/5ss0zmGy" target="_blank">
+          <img src="https://github.com/user-attachments/assets/91978483-de68-49b1-9c62-3c34b5a5a0bc" alt="Naver Store" />
+        </a>
+        <!-- 카카오톡 -->
+        <div onclick="showQR()">
+          <img src="https://github.com/user-attachments/assets/2fb774b3-ba9f-4ce0-84fe-2fa46373edd6" alt="KakaoTalk" />
         </div>
-      </section>
-
-      <!-- 썸네일 5페이지 -->
-      <section class="section portfolio"><div class="album-grid" id="grid1"></div></section>
-      <section class="section portfolio"><div class="album-grid" id="grid2"></div></section>
-      <section class="section portfolio"><div class="album-grid" id="grid3"></div></section>
-      <section class="section portfolio"><div class="album-grid" id="grid4"></div></section>
-      <section class="section portfolio"><div class="album-grid" id="grid5"></div></section>
+      </div>
     </div>
-  </div>
+  </section>
 
-  <!-- 상세 보기 모달 -->
-  <div class="modal" id="modal">
-    <span class="close-btn" onclick="closeModal()">×</span>
-    <div class="slide-wrapper" id="gallerySlide"></div>
+  <!-- 카카오톡 QR 팝업 -->
+  <div id="qrModal" class="modal">
+    <img src="https://github.com/user-attachments/assets/2fb774b3-ba9f-4ce0-84fe-2fa46373edd6" alt="카카오톡 QR" />
   </div>
 
   <script>
-    const sectionWrapper = document.getElementById('sectionWrapper');
-    const sections = document.querySelectorAll('.section');
-    let currentPage = 0;
-
-    // 페이지 스크롤 (팝업 열릴 때는 차단)
-    window.addEventListener('wheel', (e) => {
-      if (document.body.classList.contains("modal-open")) return;
-
-      if (e.deltaY > 0 && currentPage < sections.length - 1) {
-        currentPage++;
-      } else if (e.deltaY < 0 && currentPage > 0) {
-        currentPage--;
+    function showQR() {
+      document.getElementById("qrModal").style.display = "flex";
+    }
+    window.addEventListener("click", function (e) {
+      if (e.target.id === "qrModal") {
+        document.getElementById("qrModal").style.display = "none";
       }
-      sections[currentPage].scrollIntoView({ behavior: 'smooth' });
     });
-
-    // 썸네일 생성
-    const colors = ["#ffc1cc", "#f7d794", "#9ad0ec", "#c8e6c9", "#d1c4e9", "#ffccbc", "#b2dfdb"];
-    function generateGrid(gridId, startIndex) {
-      const grid = document.getElementById(gridId);
-      for (let i = 0; i < 15; i++) {
-        const div = document.createElement("div");
-        div.className = "album-thumb";
-        div.style.background = colors[(startIndex + i) % colors.length];
-        div.onclick = () => openModal(startIndex + i);
-        grid.appendChild(div);
-      }
-    }
-
-    window.onload = () => {
-      generateGrid("grid1", 0);
-      generateGrid("grid2", 15);
-      generateGrid("grid3", 30);
-      generateGrid("grid4", 45);
-      generateGrid("grid5", 60);
-    };
-
-    // 상세 보기
-    let slideIndex = 0;
-    let slideInterval;
-    let slides = [];
-
-    function openModal(index) {
-      const modal = document.getElementById("modal");
-      const slide = document.getElementById("gallerySlide");
-      slide.innerHTML = "";
-
-      slides = [];
-      for (let i = 0; i < 5; i++) {
-        const color = "#" + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
-        const div = document.createElement("div");
-        div.className = "gallery-photo";
-        div.style.background = color;
-        if (i === 0) div.classList.add("active");
-        slide.appendChild(div);
-        slides.push(div);
-      }
-
-      modal.style.display = "flex";
-      document.body.classList.add("modal-open");
-      slideIndex = 0;
-
-      slideInterval = setInterval(() => {
-        nextSlide();
-      }, 2000);
-    }
-
-    function nextSlide() {
-      slides[slideIndex].classList.remove("active");
-      slideIndex = (slideIndex + 1) % slides.length;
-      slides[slideIndex].classList.add("active");
-    }
-
-    function prevSlide() {
-      slides[slideIndex].classList.remove("active");
-      slideIndex = (slideIndex - 1 + slides.length) % slides.length;
-      slides[slideIndex].classList.add("active");
-    }
-
-    function closeModal() {
-      document.getElementById("modal").style.display = "none";
-      document.body.classList.remove("modal-open");
-      clearInterval(slideInterval);
-    }
-
-    // 빠른 휠 반응: 팝업 슬라이드에서만 적용
-    document.getElementById("modal").addEventListener("wheel", (e) => {
-      e.preventDefault();
-      if (e.deltaY > 0) nextSlide();
-      else prevSlide();
-    }, { passive: false });
   </script>
 
 </body>
