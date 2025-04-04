@@ -32,33 +32,34 @@
     }
     .sns-links {
       display: flex;
-      gap: 1rem;
+      gap: 1.5rem;
       margin-top: 1rem;
     }
     .sns-links a, .sns-links div {
-      width: 40px;
-      height: 40px;
-      display: inline-block;
+      width: 80px;
+      height: 80px;
       background-size: cover;
       background-position: center;
+      border-radius: 20%;
+      cursor: pointer;
     }
-    .insta { background-color: #E4405F; border-radius: 10px; }
-    .naver { background-color: #2DB400; border-radius: 10px; }
-    .kakao { background-color: #FAE100; border-radius: 10px; }
+    .insta { background-image: url("/mnt/data/Instagram_icon.png.webp"); }
+    .naver { background-image: url("/mnt/data/naver-icon.png"); }
+    .kakao { background-image: url("/mnt/data/카카오톡_아이콘.png"); }
 
     /* Portfolio */
     .portfolio {
       background: #fff;
-      overflow-y: hidden;
+      overflow-y: auto;
+      padding: 1rem;
     }
     .album-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      grid-template-columns: repeat(5, 1fr);
       gap: 0;
-      width: 100%;
-      height: 100%;
     }
     .album-thumb {
+      width: 100%;
       aspect-ratio: 3/4;
       background-size: cover;
       background-position: center;
@@ -92,8 +93,30 @@
       z-index: 100;
     }
 
+    /* QR Modal */
+    .modal-qr {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(0, 0, 0, 0.6);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
+    .qr-content {
+      width: 300px;
+      height: 300px;
+      background: #ddd;
+      border-radius: 20px;
+    }
+
     @media (max-width: 768px) {
       .intro h1 { font-size: 2.2rem; }
+      .sns-links a, .sns-links div {
+        width: 60px;
+        height: 60px;
+      }
     }
   </style>
 </head>
@@ -106,17 +129,17 @@
     <div class="sns-links">
       <a href="https://www.instagram.com/ololo.jejaksso/" target="_blank" class="insta" title="Instagram"></a>
       <a href="https://naver.me/5ss0zmGy" target="_blank" class="naver" title="Naver Store"></a>
-      <div class="kakao" title="카카오톡 QR 코드 자리 (추후 교체 예정)"></div>
+      <div class="kakao" title="KakaoTalk QR" onclick="openQRModal()"></div>
     </div>
   </section>
 
   <!-- Portfolio -->
   <section class="portfolio" id="portfolio">
     <div class="album-grid" id="albumGrid">
-      <!-- 20개의 썸네일 생성 -->
+      <!-- 썸네일 30개 생성 -->
       <script>
         const colors = ["#ffc1cc", "#f7d794", "#9ad0ec", "#c8e6c9", "#d1c4e9", "#ffccbc", "#b2dfdb", "#ffecb3", "#f8bbd0", "#a5d6a7"];
-        for (let i = 0; i < 20; i++) {
+        for (let i = 0; i < 30; i++) {
           const color = colors[Math.floor(Math.random() * colors.length)];
           document.write(`<div class="album-thumb" style="background:${color};" onclick="goToGallery(${i})"></div>`);
         }
@@ -127,10 +150,13 @@
   <!-- Gallery Detail -->
   <section class="gallery-page" id="gallery">
     <button class="back-btn" onclick="backToPortfolio()">← 돌아가기</button>
-    <div id="galleryContainer">
-      <!-- 상세 이미지 5개 생성 -->
-    </div>
+    <div id="galleryContainer"></div>
   </section>
+
+  <!-- QR Modal -->
+  <div class="modal-qr" id="qrModal" onclick="closeQRModal()">
+    <div class="qr-content"></div>
+  </div>
 
   <script>
     let currentPage = 1;
@@ -174,6 +200,14 @@
       document.getElementById("intro").style.display = "none";
       document.getElementById("portfolio").style.display = "block";
       currentPage = 2;
+    }
+
+    function openQRModal() {
+      document.getElementById("qrModal").style.display = "flex";
+    }
+
+    function closeQRModal() {
+      document.getElementById("qrModal").style.display = "none";
     }
   </script>
 </body>
