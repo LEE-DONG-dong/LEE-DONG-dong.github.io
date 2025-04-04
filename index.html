@@ -45,48 +45,103 @@
       cursor: pointer;
     }
 
+    .album-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      grid-template-rows: repeat(3, 1fr);
+      width: 100vw;
+      height: 100vh;
+    }
+    .album-thumb {
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      cursor: pointer;
+    }
+
     .modal {
       position: fixed;
       top: 0; left: 0;
       width: 100vw;
       height: 100vh;
-      background: rgba(0,0,0,0.6);
+      background: rgba(0,0,0,0.7);
       display: none;
       justify-content: center;
       align-items: center;
       z-index: 1000;
     }
 
-    .modal img {
-      width: 300px;
-      height: 300px;
+    .slide-wrapper {
+      position: relative;
+      width: 66%;
+      aspect-ratio: 3 / 4;
+      overflow: hidden;
+    }
+
+    .gallery-photo {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 12px;
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+    }
+
+    .gallery-photo.active {
+      opacity: 1;
+    }
+
+    .close-btn {
+      position: fixed;
+      top: 20px;
+      right: 30px;
+      font-size: 2rem;
+      color: white;
+      background: rgba(0,0,0,0.5);
+      padding: 0.2em 0.6em;
       border-radius: 8px;
+      cursor: pointer;
+      z-index: 1000;
     }
   </style>
 </head>
 <body>
-
-  <!-- 인트로 페이지 -->
-  <section class="section intro">
-    <div>
-      <h1>이응제작쏘</h1>
-      <p>자이언트 플라워 · 웨딩 데코 · 포토존</p>
-      <div class="sns-icons">
-        <!-- 인스타그램 -->
-        <a href="https://www.instagram.com/ololo.jejaksso/" target="_blank">
-          <img src="https://github.com/user-attachments/assets/ecc21de4-9bd2-4821-b400-183c24e8a802" alt="Instagram" />
-        </a>
-        <!-- 네이버 스토어 -->
-        <a href="https://naver.me/5ss0zmGy" target="_blank">
-          <img src="https://github.com/user-attachments/assets/91978483-de68-49b1-9c62-3c34b5a5a0bc" alt="Naver Store" />
-        </a>
-        <!-- 카카오톡 -->
-        <div onclick="showQR()">
-          <img src="https://github.com/user-attachments/assets/2fb774b3-ba9f-4ce0-84fe-2fa46373edd6" alt="KakaoTalk" />
+  <!-- 모든 페이지를 포함하는 컨테이너 -->
+  <div id="pages">
+    <!-- 인트로 페이지 -->
+    <section class="section intro">
+      <div>
+        <h1>이응제작쏘</h1>
+        <p>자이언트 플라워 · 웨딩 데코 · 포토존</p>
+        <div class="sns-icons">
+          <a href="https://www.instagram.com/ololo.jejaksso/" target="_blank">
+            <img src="https://github.com/user-attachments/assets/ecc21de4-9bd2-4821-b400-183c24e8a802" alt="Instagram" />
+          </a>
+          <a href="https://naver.me/5ss0zmGy" target="_blank">
+            <img src="https://github.com/user-attachments/assets/91978483-de68-49b1-9c62-3c34b5a5a0bc" alt="Naver Store" />
+          </a>
+          <div onclick="showQR()">
+            <img src="https://github.com/user-attachments/assets/2fb774b3-ba9f-4ce0-84fe-2fa46373edd6" alt="KakaoTalk" />
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
+
+    <!-- 썸네일 페이지 5개 -->
+    <section class="section portfolio"><div class="album-grid" id="grid1"></div></section>
+    <section class="section portfolio"><div class="album-grid" id="grid2"></div></section>
+    <section class="section portfolio"><div class="album-grid" id="grid3"></div></section>
+    <section class="section portfolio"><div class="album-grid" id="grid4"></div></section>
+    <section class="section portfolio"><div class="album-grid" id="grid5"></div></section>
+  </div>
+
+  <!-- 상세보기 팝업 -->
+  <div class="modal" id="modal">
+    <span class="close-btn" onclick="closeModal()">×</span>
+    <div class="slide-wrapper" id="gallerySlide"></div>
+  </div>
 
   <!-- 카카오톡 QR 팝업 -->
   <div id="qrModal" class="modal">
@@ -94,6 +149,73 @@
   </div>
 
   <script>
+    const sections = document.querySelectorAll(".section");
+    let currentPage = 0;
+
+    window.addEventListener("wheel", (e) => {
+      if (document.body.classList.contains("modal-open")) return;
+      if (e.deltaY > 0 && currentPage < sections.length - 1) currentPage++;
+      else if (e.deltaY < 0 && currentPage > 0) currentPage--;
+      sections[currentPage].scrollIntoView({ behavior: "smooth" });
+    });
+
+    const colors = ["#ffc1cc", "#f7d794", "#9ad0ec", "#c8e6c9", "#d1c4e9", "#ffccbc", "#b2dfdb"];
+    function generateGrid(gridId, startIndex) {
+      const grid = document.getElementById(gridId);
+      for (let i = 0; i < 15; i++) {
+        const div = document.createElement("div");
+        div.className = "album-thumb";
+        div.style.background = colors[(startIndex + i) % colors.length];
+        div.onclick = () => openModal(startIndex + i);
+        grid.appendChild(div);
+      }
+    }
+
+    window.onload = () => {
+      generateGrid("grid1", 0);
+      generateGrid("grid2", 15);
+      generateGrid("grid3", 30);
+      generateGrid("grid4", 45);
+      generateGrid("grid5", 60);
+    };
+
+    let slideIndex = 0;
+    let slideInterval;
+    let slides = [];
+
+    function openModal(index) {
+      const modal = document.getElementById("modal");
+      const slide = document.getElementById("gallerySlide");
+      slide.innerHTML = "";
+      slides = [];
+      for (let i = 0; i < 5; i++) {
+        const color = "#" + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
+        const div = document.createElement("div");
+        div.className = "gallery-photo";
+        div.style.background = color;
+        if (i === 0) div.classList.add("active");
+        slide.appendChild(div);
+        slides.push(div);
+      }
+      modal.style.display = "flex";
+      document.body.classList.add("modal-open");
+      slideIndex = 0;
+      slideInterval = setInterval(() => nextSlide(), 2000);
+    }
+
+    function nextSlide() {
+      slides[slideIndex].classList.remove("active");
+      slideIndex = (slideIndex + 1) % slides.length;
+      slides[slideIndex].classList.add("active");
+    }
+
+    function closeModal() {
+      document.getElementById("modal").style.display = "none";
+      document.body.classList.remove("modal-open");
+      clearInterval(slideInterval);
+    }
+
+    // QR 팝업
     function showQR() {
       document.getElementById("qrModal").style.display = "flex";
     }
