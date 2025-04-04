@@ -173,13 +173,25 @@
       sections[currentPage].scrollIntoView({ behavior: "smooth" });
     });
 
-    const colors = ["#ffc1cc", "#f7d794", "#9ad0ec", "#c8e6c9", "#d1c4e9", "#ffccbc", "#b2dfdb"];
+    const imageURLs = [
+      "https://github.com/user-attachments/assets/4.png",
+      "https://github.com/user-attachments/assets/5.png",
+      "https://github.com/user-attachments/assets/6.png",
+      "https://github.com/user-attachments/assets/7.png",
+      "https://github.com/user-attachments/assets/8.png"
+    ];
+
     function generateGrid(gridId, startIndex) {
       const grid = document.getElementById(gridId);
       for (let i = 0; i < 15; i++) {
         const div = document.createElement("div");
         div.className = "album-thumb";
-        div.style.background = colors[(startIndex + i) % colors.length];
+        if (startIndex === 0 && i < imageURLs.length) {
+          div.style.backgroundImage = `url(${imageURLs[i]})`;
+        } else {
+          const colors = ["#ffc1cc", "#f7d794", "#9ad0ec", "#c8e6c9", "#d1c4e9", "#ffccbc", "#b2dfdb"];
+          div.style.background = colors[(startIndex + i) % colors.length];
+        }
         div.onclick = () => openModal(startIndex + i);
         grid.appendChild(div);
       }
@@ -214,7 +226,7 @@
       modal.style.display = "flex";
       document.body.classList.add("modal-open");
       slideIndex = 0;
-      slideInterval = setInterval(() => nextSlide(), 1000); // 전환 속도 빠르게 조정
+      slideInterval = setInterval(() => nextSlide(), 1000);
     }
 
     function nextSlide() {
