@@ -1,209 +1,40 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>이응제작쏘</title>
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-      font-family: 'Noto Sans KR', sans-serif;
-      scroll-behavior: smooth;
-    }
-
-    .page-container {
-      height: 100vh;
-      width: 100vw;
-      overflow: hidden;
-      position: relative;
-    }
-
-    .section-wrapper {
-      height: 100%;
-      width: 100%;
-      overflow: hidden;
-    }
-
-    .section {
-      height: 100vh;
-      width: 100vw;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-shrink: 0;
-    }
-
-    .intro {
-      flex-direction: column;
-      background: linear-gradient(135deg, #ffd6e0, #fff5f8);
-      text-align: center;
-    }
-    .intro h1 {
-      font-size: 3rem;
-      color: #c94f7c;
-    }
-
-    .portfolio {
-      background: #fff;
-    }
-
-    .album-grid {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      grid-template-rows: repeat(3, 1fr);
-      width: 100vw;
-      height: 100vh;
-    }
-
-    .album-thumb {
-      width: 100%;
-      height: 100%;
-      background-size: cover;
-      background-position: center;
-      cursor: pointer;
-    }
-
-    /* 갤러리 팝업 */
-    .modal {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(0,0,0,0.6);
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem 1rem;
-      z-index: 999;
-    }
-
-    .gallery-photo {
-      width: 66%;
-      aspect-ratio: 3 / 4;
-      background: #ccc;
-      border-radius: 12px;
-      transition: opacity 0.5s ease-in-out;
-    }
-
-    .close-btn {
-      position: fixed;
-      top: 20px;
-      right: 30px;
-      font-size: 2rem;
-      color: white;
-      background: rgba(0,0,0,0.4);
-      padding: 0.2em 0.6em;
-      border-radius: 8px;
-      cursor: pointer;
-      z-index: 1000;
-    }
-
-    body, html {
-      max-width: 100vw;
-      overflow-x: hidden;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>이응제작쏘</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <!-- 인트로 섹션 -->
+    <section id="intro">
+        <h1>이응제작쏘</h1>
+        <p>자이언트 플라워 · 웨딩 데코 · 포토존</p>
+        <a href="#portfolio" class="scroll-link">포트폴리오 보러가기</a>
+    </section>
 
-  <div class="page-container" id="pageContainer">
-    <div class="section-wrapper" id="sectionWrapper">
-      <!-- 인트로 -->
-      <section class="section intro">
-        <div>
-          <h1>이응제작쏘</h1>
-          <p>자이언트 플라워 · 웨딩 데코 · 포토존</p>
+    <!-- 포트폴리오 섹션 -->
+    <section id="portfolio">
+        <h2>포트폴리오</h2>
+        <div class="portfolio-container" id="portfolioContainer">
+            <!-- 썸네일이 여기 동적으로 추가됩니다 -->
         </div>
-      </section>
+        <!-- 페이징 버튼 -->
+        <div class="pagination" id="pagination">
+            <!-- 페이지 번호가 여기 동적으로 추가됩니다 -->
+        </div>
+    </section>
 
-      <!-- 썸네일 5페이지 -->
-      <section class="section portfolio"><div class="album-grid" id="grid1"></div></section>
-      <section class="section portfolio"><div class="album-grid" id="grid2"></div></section>
-      <section class="section portfolio"><div class="album-grid" id="grid3"></div></section>
-      <section class="section portfolio"><div class="album-grid" id="grid4"></div></section>
-      <section class="section portfolio"><div class="album-grid" id="grid5"></div></section>
+    <!-- 모달 구조 -->
+    <div class="modal" id="detailModal">
+        <span class="close" id="modalClose">&times;</span>
+        <div class="modal-content" id="modalContent">
+            <!-- 상세 이미지가 여기 동적으로 추가됩니다 -->
+        </div>
     </div>
-  </div>
 
-  <!-- 상세 보기 모달 -->
-  <div class="modal" id="modal">
-    <span class="close-btn" onclick="closeModal()">×</span>
-    <div id="gallerySlide"></div>
-  </div>
-
-  <script>
-    const sectionWrapper = document.getElementById('sectionWrapper');
-    const sections = document.querySelectorAll('.section');
-    let currentPage = 0;
-
-    // 부드러운 마우스 휠 페이지 전환
-    window.addEventListener('wheel', (e) => {
-      if (e.deltaY > 0 && currentPage < sections.length - 1) {
-        currentPage++;
-      } else if (e.deltaY < 0 && currentPage > 0) {
-        currentPage--;
-      }
-      sections[currentPage].scrollIntoView({ behavior: 'smooth' });
-    });
-
-    // 썸네일 생성
-    const colors = ["#ffc1cc", "#f7d794", "#9ad0ec", "#c8e6c9", "#d1c4e9", "#ffccbc", "#b2dfdb"];
-    function generateGrid(gridId, startIndex) {
-      const grid = document.getElementById(gridId);
-      for (let i = 0; i < 15; i++) {
-        const div = document.createElement("div");
-        div.className = "album-thumb";
-        div.style.background = colors[(startIndex + i) % colors.length];
-        div.onclick = () => openModal(startIndex + i);
-        grid.appendChild(div);
-      }
-    }
-
-    window.onload = () => {
-      generateGrid("grid1", 0);
-      generateGrid("grid2", 15);
-      generateGrid("grid3", 30);
-      generateGrid("grid4", 45);
-      generateGrid("grid5", 60);
-    };
-
-    // 갤러리 슬라이드 기능
-    let slideIndex = 0;
-    let slideInterval;
-    function openModal(index) {
-      const modal = document.getElementById("modal");
-      const slide = document.getElementById("gallerySlide");
-      slide.innerHTML = "";
-
-      const slides = [];
-      for (let i = 0; i < 5; i++) {
-        const color = "#" + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
-        const div = document.createElement("div");
-        div.className = "gallery-photo";
-        div.style.background = color;
-        div.style.display = i === 0 ? "block" : "none";
-        slides.push(div);
-        slide.appendChild(div);
-      }
-
-      modal.style.display = "flex";
-      slideIndex = 0;
-
-      slideInterval = setInterval(() => {
-        slides[slideIndex].style.display = "none";
-        slideIndex = (slideIndex + 1) % slides.length;
-        slides[slideIndex].style.display = "block";
-      }, 2000);
-    }
-
-    function closeModal() {
-      document.getElementById("modal").style.display = "none";
-      clearInterval(slideInterval);
-    }
-  </script>
-
+    <script src="script.js"></script>
 </body>
 </html>
