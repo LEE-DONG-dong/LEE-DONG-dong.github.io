@@ -209,25 +209,41 @@
     let slideInterval;
     let slides = [];
 
-    function openModal(index) {
-      const modal = document.getElementById("modal");
-      const slide = document.getElementById("gallerySlide");
-      slide.innerHTML = "";
-      slides = [];
-      for (let i = 0; i < 5; i++) {
-        const color = "#" + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
-        const div = document.createElement("div");
-        div.className = "gallery-photo";
-        div.style.background = color;
-        if (i === 0) div.classList.add("active");
-        slide.appendChild(div);
-        slides.push(div);
-      }
-      modal.style.display = "flex";
-      document.body.classList.add("modal-open");
-      slideIndex = 0;
-      slideInterval = setInterval(() => nextSlide(), 1000);
+function openModal(index) {
+  const modal = document.getElementById("modal");
+  const slide = document.getElementById("gallerySlide");
+  slide.innerHTML = "";
+  slides = [];
+
+  if (index === 0) {
+    for (let i = 0; i < imageURLs.length; i++) {
+      const div = document.createElement("div");
+      div.className = "gallery-photo";
+      div.style.backgroundImage = `url(${imageURLs[i]})`;
+      div.style.backgroundSize = "cover";
+      div.style.backgroundPosition = "center";
+      if (i === 0) div.classList.add("active");
+      slide.appendChild(div);
+      slides.push(div);
     }
+  } else {
+    for (let i = 0; i < 5; i++) {
+      const color = "#" + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
+      const div = document.createElement("div");
+      div.className = "gallery-photo";
+      div.style.background = color;
+      if (i === 0) div.classList.add("active");
+      slide.appendChild(div);
+      slides.push(div);
+    }
+  }
+
+  modal.style.display = "flex";
+  document.body.classList.add("modal-open");
+  slideIndex = 0;
+  slideInterval = setInterval(() => nextSlide(), 1000);
+}
+
 
     function nextSlide() {
       slides[slideIndex].classList.remove("active");
