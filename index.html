@@ -86,7 +86,7 @@
       height: 100%;
       border-radius: 12px;
       opacity: 0;
-      transition: opacity 0.3s ease-in-out;
+      transition: opacity 0.15s ease-in-out;
     }
 
     .gallery-photo.active {
@@ -104,6 +104,19 @@
       border-radius: 8px;
       cursor: pointer;
       z-index: 1000;
+    }
+
+    .qr-close-btn {
+      position: fixed;
+      top: 20px;
+      right: 30px;
+      font-size: 2rem;
+      color: white;
+      background: rgba(0,0,0,0.5);
+      padding: 0.2em 0.6em;
+      border-radius: 8px;
+      cursor: pointer;
+      z-index: 1001;
     }
   </style>
 </head>
@@ -145,6 +158,7 @@
 
   <!-- 카카오톡 QR 팝업 -->
   <div id="qrModal" class="modal">
+    <span class="qr-close-btn" onclick="hideQR()">×</span>
     <img src="https://github.com/user-attachments/assets/2fb774b3-ba9f-4ce0-84fe-2fa46373edd6" alt="카카오톡 QR" />
   </div>
 
@@ -200,7 +214,7 @@
       modal.style.display = "flex";
       document.body.classList.add("modal-open");
       slideIndex = 0;
-      slideInterval = setInterval(() => nextSlide(), 2000);
+      slideInterval = setInterval(() => nextSlide(), 1000); // 전환 속도 빠르게 조정
     }
 
     function nextSlide() {
@@ -215,16 +229,12 @@
       clearInterval(slideInterval);
     }
 
-    // QR 팝업
     function showQR() {
       document.getElementById("qrModal").style.display = "flex";
     }
-    window.addEventListener("click", function (e) {
-      if (e.target.id === "qrModal") {
-        document.getElementById("qrModal").style.display = "none";
-      }
-    });
+    function hideQR() {
+      document.getElementById("qrModal").style.display = "none";
+    }
   </script>
-
 </body>
 </html>
