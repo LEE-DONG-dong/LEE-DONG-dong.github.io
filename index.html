@@ -77,24 +77,45 @@
       width: 66%;
       aspect-ratio: 3 / 4;
       overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
-.gallery-photo {
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: black;
-  opacity: 0;
-  transition: opacity 0.3s ease-in-out;
-}
-.gallery-photo.active {
-  opacity: 1;
-}
+    .gallery-photo {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      display: none;
+      justify-content: center;
+      align-items: center;
+    }
 
+    .gallery-photo img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+
+    .gallery-photo.active {
+      display: flex;
+    }
+
+    .slide-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 2rem;
+      color: white;
+      background: rgba(0,0,0,0.4);
+      padding: 0.5em 0.8em;
+      border: none;
+      cursor: pointer;
+      z-index: 1001;
+    }
+    .slide-btn.left { left: 10px; }
+    .slide-btn.right { right: 10px; }
 
     .close-btn {
       position: fixed;
@@ -124,9 +145,7 @@
   </style>
 </head>
 <body>
-  <!-- 모든 페이지를 포함하는 컨테이너 -->
   <div id="pages">
-    <!-- 인트로 페이지 -->
     <section class="section intro">
       <div>
         <h1>이응제작쏘</h1>
@@ -144,8 +163,6 @@
         </div>
       </div>
     </section>
-
-    <!-- 썸네일 페이지 5개 -->
     <section class="section portfolio"><div class="album-grid" id="grid1"></div></section>
     <section class="section portfolio"><div class="album-grid" id="grid2"></div></section>
     <section class="section portfolio"><div class="album-grid" id="grid3"></div></section>
@@ -153,13 +170,15 @@
     <section class="section portfolio"><div class="album-grid" id="grid5"></div></section>
   </div>
 
-  <!-- 상세보기 팝업 -->
   <div class="modal" id="modal">
     <span class="close-btn" onclick="closeModal()">×</span>
-    <div class="slide-wrapper" id="gallerySlide"></div>
+    <div class="slide-wrapper">
+      <button class="slide-btn left" onclick="prevSlide()">◀</button>
+      <div id="gallerySlide"></div>
+      <button class="slide-btn right" onclick="nextSlide()">▶</button>
+    </div>
   </div>
 
-  <!-- 카카오톡 QR 팝업 -->
   <div id="qrModal" class="modal">
     <span class="qr-close-btn" onclick="hideQR()">×</span>
     <img src="https://github.com/user-attachments/assets/2fb774b3-ba9f-4ce0-84fe-2fa46373edd6" alt="카카오톡 QR" />
@@ -209,62 +228,53 @@
     };
 
     let slideIndex = 0;
-    let slideInterval;
     let slides = [];
 
-function openModal(index) {
-  const modal = document.getElementById("modal");
-  const slide = document.getElementById("gallerySlide");
-  slide.innerHTML = "";
-  slides = [];
+    function openModal(index) {
+      const modal = document.getElementById("modal");
+      const slide = document.getElementById("gallerySlide");
+      slide.innerHTML = "";
+      slides = [];
 
-if (index === 0) {
-  for (let i = 0; i < imageURLs.length; i++) {
-    const container = document.createElement("div");
-    container.className = "gallery-photo active";
-    container.style.opacity = i === 0 ? "1" : "0";
+      if (index === 0) {
+        for (let i = 0; i < imageURLs.length; i++) {
+          const container = document.createElement("div");
+          container.className = "gallery-photo";
+          if (i === 0) container.classList.add("active");
 
-    const img = document.createElement("img");
-    img.src = imageURLs[i];
-    img.alt = `상세 이미지 ${i + 1}`;
-    img.style.width = "100%";
-    img.style.height = "100%";
-    img.style.objectFit = "contain";
+          const img = document.createElement("img");
+          img.src = imageURLs[i];
+          img.alt = `상세 이미지 ${i + 1}`;
 
-    container.appendChild(img);
-    slide.appendChild(container);
-    slides.push(container);
-  }
-}
- else {
-    for (let i = 0; i < 5; i++) {
-      const color = "#" + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
-      const div = document.createElement("div");
-      div.className = "gallery-photo";
-      div.style.background = color;
-      if (i === 0) div.classList.add("active");
-      slide.appendChild(div);
-      slides.push(div);
+          container.appendChild(img);
+          slide.appendChild(container);
+          slides.push(container);
+        }
+      }
+
+      modal.style.display = "flex";
+      document.body.classList.add("modal-open");
+      slideIndex = 0;
     }
-  }
-
-  modal.style.display = "flex";
-  document.body.classList.add("modal-open");
-  slideIndex = 0;
-  slideInterval = setInterval(() => nextSlide(), 1000);
-}
-
 
     function nextSlide() {
+      if (!slides.length) return;
       slides[slideIndex].classList.remove("active");
       slideIndex = (slideIndex + 1) % slides.length;
+      slides[slideIndex].classList.add("active");
+    }
+
+    function prevSlide() {
+      if (!slides.length) return;
+      slides[slideIndex].classList.remove("active");
+      slideIndex = (slideIndex - 1 + slides.length) % slides.length;
       slides[slideIndex].classList.add("active");
     }
 
     function closeModal() {
       document.getElementById("modal").style.display = "none";
       document.body.classList.remove("modal-open");
-      clearInterval(slideInterval);
+      slides = [];
     }
 
     function showQR() {
