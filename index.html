@@ -148,7 +148,7 @@
   <div id="pages">
     <section class="section intro">
   <div>
-    <img src="https://github.com/user-attachments/assets/c926dd8c-3dc8-43eb-92d2-464f583bcbea" alt="이응제작쏘 로고" style="width: 200px; height: auto; margin-bottom: 1rem;" />
+    <img src="https://github.com/user-attachments/assets/89446c94-f40a-47c1-8a65-769e136ed9b4" alt="이응제작쏘 로고" style="width: 200px; height: auto; margin-bottom: 1rem;" />
         <h1>이응제작쏘</h1>
         <p>자이언트 플라워 · 웨딩 데코 · 포토존</p>
         <div class="sns-icons">
@@ -228,12 +228,22 @@
 };;
 
     function generateGrid(gridId, startIndex) {
-      const grid = document.getElementById(gridId);
-      for (let i = 0; i < 15; i++) {
-        const div = document.createElement("div");
-        div.className = "album-thumb";
-        if (startIndex === 0 && i < imageURLs.length) {
-          div.style.backgroundImage = `url(${imageURLs[i]})`;
+  const grid = document.getElementById(gridId);
+  for (let i = 0; i < 15; i++) {
+    const div = document.createElement("div");
+    div.className = "album-thumb";
+
+    const thumbIndex = startIndex + i;
+    if (imageMap[thumbIndex] && imageMap[thumbIndex][0]) {
+      div.style.backgroundImage = `url(${imageMap[thumbIndex][0]})`;
+    } else {
+      div.style.background = "#eee";
+    }
+
+    div.onclick = () => openModal(thumbIndex);
+    grid.appendChild(div);
+  }
+})`;
         } else {
           const colors = ["#ffc1cc", "#f7d794", "#9ad0ec", "#c8e6c9", "#d1c4e9", "#ffccbc", "#b2dfdb"];
           div.style.background = colors[(startIndex + i) % colors.length];
@@ -278,7 +288,14 @@
   modal.style.display = "flex";
   document.body.classList.add("modal-open");
   slideIndex = 0;
-}
+}`;
+
+          container.appendChild(img);
+          slide.appendChild(container);
+          slides.push(container);
+        }
+      }
+
       modal.style.display = "flex";
       document.body.classList.add("modal-open");
       slideIndex = 0;
