@@ -1,6 +1,6 @@
 # LEE-DONG-dong.github.io
 
-![Image](https://github.com/user-attachments/assets/89446c94-f40a-47c1-8a65-769e136ed9b4)
+![Image](https://github.com/user-attachments/assets/c926dd8c-3dc8-43eb-92d2-464f583bcbea)
 
 ![Image](https://github.com/user-attachments/assets/ecc21de4-9bd2-4821-b400-183c24e8a802)
 
