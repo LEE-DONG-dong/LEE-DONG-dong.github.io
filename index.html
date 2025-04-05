@@ -6,16 +6,13 @@
   <title>이응제작쏘</title>
   <style>
     html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      width: 100%;
-      font-family: 'Noto Sans KR', sans-serif;
-      overflow: hidden;
-      scroll-snap-type: y mandatory;
-      scroll-behavior: smooth;
-      scroll-behavior: smooth;
-    }
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  font-family: 'Noto Sans KR', sans-serif;
+  overflow: hidden;
+}
 
     .section {
       height: 100vh;
@@ -191,11 +188,14 @@
     const sections = document.querySelectorAll(".section");
     let currentPage = 0;
 
-    window.addEventListener("wheel", (e) => {
-      if (document.body.classList.contains("modal-open")) return;
-      if (e.deltaY > 0 && currentPage < sections.length - 1) currentPage++;
-      else if (e.deltaY < 0 && currentPage > 0) currentPage--;
-      sections[currentPage].scrollIntoView({ behavior: "smooth" });
+    let currentPage = 0;
+window.addEventListener("wheel", (e) => {
+  if (document.body.classList.contains("modal-open")) return;
+  const sections = document.querySelectorAll(".section");
+  if (e.deltaY > 0 && currentPage < sections.length - 1) currentPage++;
+  else if (e.deltaY < 0 && currentPage > 0) currentPage--;
+  sections[currentPage].scrollIntoView({ behavior: "smooth" });
+});
     });
 
     // 아래는 썸네일과 상세 이미지 매핑 설정입니다.
@@ -232,7 +232,7 @@ const imageMap = {
   25: ["https://github.com/user-attachments/assets/2ed92d57-c365-479d-b122-88cb08041b3a", "https://github.com/user-attachments/assets/0f73cd83-f3c8-4a56-8fa9-67c7dac3c35a", "https://github.com/user-attachments/assets/97313b92-8fb9-4248-99cc-8dd5206804a6"],
   26: ["https://github.com/user-attachments/assets/630d1b68-aa01-4ee4-afcb-aa48485725e6", "https://github.com/user-attachments/assets/c2d21587-5ba3-406d-ad34-9dcc35a74abe", "https://github.com/user-attachments/assets/47582e6a-c310-4726-af4e-ed994d7395f9", "https://github.com/user-attachments/assets/07451755-2d22-4306-9bf4-e0bb8c7c57f7", "https://github.com/user-attachments/assets/c7a82bbd-d1dc-46be-a516-7e2b4803f7fe"],
   27: ["https://github.com/user-attachments/assets/a9ade96a-b6d8-45e1-b7f4-e48e7a428a33", "https://github.com/user-attachments/assets/2770bc22-0062-40bc-9c50-f202e1526558", "https://github.com/user-attachments/assets/659d38d5-12b0-428b-9170-972a7f52c67d", "https://github.com/user-attachments/assets/e7116c52-268a-4adc-b03c-a5f28046ebbc", "https://github.com/user-attachments/assets/4aac6465-31bc-4c06-a17e-6fe4aa89f8e9"]
-};;
+};
 
     function generateGrid(gridId, startIndex) {
   const grid = document.getElementById(gridId);
@@ -242,7 +242,7 @@ const imageMap = {
 
     const thumbIndex = startIndex + i;
     if (imageMap[thumbIndex] && imageMap[thumbIndex][0]) {
-      div.style.backgroundImage = `url(${imageMap[thumbIndex][0]})`;
+      div.style.backgroundImage = `url(${imageMap[thumbIndex][0]
     } else {
       div.style.background = "#eee";
     }
@@ -329,8 +329,11 @@ const imageMap = {
     }
 
     function showQR() {
-      document.getElementById("qrModal").style.display = "flex";
-    }
+  const qrModal = document.getElementById("qrModal");
+  qrModal.style.display = "flex";
+  qrModal.style.justifyContent = "center";
+  qrModal.style.alignItems = "center";
+}
     function hideQR() {
       document.getElementById("qrModal").style.display = "none";
     }
