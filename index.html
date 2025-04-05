@@ -11,7 +11,7 @@
       height: 100%;
       width: 100%;
       font-family: 'Noto Sans KR', sans-serif;
-      overflow: hidden;
+      overflow: auto;
       scroll-behavior: smooth;
     }
 
@@ -148,7 +148,7 @@
   <div id="pages">
     <section class="section intro">
   <div>
-    <img src="https://github.com/user-attachments/assets/c926dd8c-3dc8-43eb-92d2-464f583bcbea" alt="이응제작쏘 로고" style="width: 200px; height: auto; margin-bottom: 1rem;" />
+    <img src="https://github.com/user-attachments/assets/89446c94-f40a-47c1-8a65-769e136ed9b4" alt="이응제작쏘 로고" style="width: 200px; height: auto; margin-bottom: 1rem;" />
         <h1>이응제작쏘</h1>
         <p>자이언트 플라워 · 웨딩 데코 · 포토존</p>
         <div class="sns-icons">
@@ -196,7 +196,7 @@
       sections[currentPage].scrollIntoView({ behavior: "smooth" });
     });
 
-    const imageURLs = [
+    const imageMap = {
   0: ["https://github.com/user-attachments/assets/73395fb8-4c5d-44f4-af4b-4ec5e62ed4ed", "https://github.com/user-attachments/assets/2c9bbf65-393b-4529-a4f2-c154993bdf1c"],
   1: ["https://github.com/user-attachments/assets/d8d54030-a77a-4564-9b45-85d5ee551b33", "https://github.com/user-attachments/assets/4df8a1df-2490-4430-b2d8-4e768d4f6403", "https://github.com/user-attachments/assets/550f6e07-7487-454d-9139-6fac33d12d89", "https://github.com/user-attachments/assets/64a4c533-d797-4412-85c8-e1294dcee7ad", "https://github.com/user-attachments/assets/a7b901cf-0933-4b01-b463-cf131232d2b9", "https://github.com/user-attachments/assets/6045fa43-9eca-4304-a85b-670a03242726", "https://github.com/user-attachments/assets/adbfad49-1703-445e-b730-bdfe901d89c6"],
   2: ["https://github.com/user-attachments/assets/4d0ce681-6ff0-4e84-9dc9-4cfaa09945a7"],
@@ -226,6 +226,7 @@
   26: ["https://github.com/user-attachments/assets/630d1b68-aa01-4ee4-afcb-aa48485725e6", "https://github.com/user-attachments/assets/c2d21587-5ba3-406d-ad34-9dcc35a74abe", "https://github.com/user-attachments/assets/47582e6a-c310-4726-af4e-ed994d7395f9", "https://github.com/user-attachments/assets/07451755-2d22-4306-9bf4-e0bb8c7c57f7", "https://github.com/user-attachments/assets/c7a82bbd-d1dc-46be-a516-7e2b4803f7fe"],
   27: ["https://github.com/user-attachments/assets/a9ade96a-b6d8-45e1-b7f4-e48e7a428a33", "https://github.com/user-attachments/assets/2770bc22-0062-40bc-9c50-f202e1526558", "https://github.com/user-attachments/assets/659d38d5-12b0-428b-9170-972a7f52c67d", "https://github.com/user-attachments/assets/e7116c52-268a-4adc-b03c-a5f28046ebbc", "https://github.com/user-attachments/assets/4aac6465-31bc-4c06-a17e-6fe4aa89f8e9"]
 };;
+
     function generateGrid(gridId, startIndex) {
       const grid = document.getElementById(gridId);
       for (let i = 0; i < 15; i++) {
@@ -259,22 +260,25 @@
       slide.innerHTML = "";
       slides = [];
 
-      if (index === 0) {
-        for (let i = 0; i < imageURLs.length; i++) {
-          const container = document.createElement("div");
-          container.className = "gallery-photo";
-          if (i === 0) container.classList.add("active");
+      if (imageMap[index]) {
+  const urls = imageMap[index];
+  for (let i = 0; i < urls.length; i++) {
+    const container = document.createElement("div");
+    container.className = "gallery-photo";
+    if (i === 0) container.classList.add("active");
 
-          const img = document.createElement("img");
-          img.src = imageURLs[i];
-          img.alt = `상세 이미지 ${i + 1}`;
+    const img = document.createElement("img");
+    img.src = urls[i];
+    img.alt = `상세 이미지 ${i + 1}`;
 
-          container.appendChild(img);
-          slide.appendChild(container);
-          slides.push(container);
-        }
-      }
-
+    container.appendChild(img);
+    slide.appendChild(container);
+    slides.push(container);
+  }
+  modal.style.display = "flex";
+  document.body.classList.add("modal-open");
+  slideIndex = 0;
+}
       modal.style.display = "flex";
       document.body.classList.add("modal-open");
       slideIndex = 0;
