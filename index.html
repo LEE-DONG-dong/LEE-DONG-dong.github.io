@@ -187,14 +187,14 @@
   <script>
     const sections = document.querySelectorAll(".section");
     let currentPage = 0;
-
-    let currentPage = 0;
 window.addEventListener("wheel", (e) => {
   if (document.body.classList.contains("modal-open")) return;
   if (e.deltaY > 0 && currentPage < sections.length - 1) currentPage++;
   else if (e.deltaY < 0 && currentPage > 0) currentPage--;
   sections[currentPage].scrollIntoView({ behavior: "smooth" });
 });
+
+    
   if (e.deltaY > 0 && currentPage < sections.length - 1) currentPage++;
   else if (e.deltaY < 0 && currentPage > 0) currentPage--;
   sections[currentPage].scrollIntoView({ behavior: "smooth" });
@@ -246,7 +246,7 @@ const imageMap = {
     const thumbIndex = startIndex + i;
     if (imageMap[thumbIndex] && imageMap[thumbIndex][0]) {
       div.style.backgroundImage = `url(${imageMap[thumbIndex][0]})`;
-    } else { {
+    } else {
           const colors = ["#ffc1cc", "#f7d794", "#9ad0ec", "#c8e6c9", "#d1c4e9", "#ffccbc", "#b2dfdb"];
           div.style.background = colors[(startIndex + i) % colors.length];
         }
@@ -291,13 +291,11 @@ const imageMap = {
   document.body.classList.add("modal-open");
   slideIndex = 0;
           slide.appendChild(container);
-          slides.push(container);
-        }
-      }
-
-      modal.style.display = "flex";
-      document.body.classList.add("modal-open");
-      slideIndex = 0;
+    slides.push(container);
+  }
+  modal.style.display = "flex";
+  document.body.classList.add("modal-open");
+  slideIndex = 0;
     }
 
     function nextSlide() {
