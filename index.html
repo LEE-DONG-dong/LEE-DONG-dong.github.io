@@ -12,6 +12,8 @@
       width: 100%;
       font-family: 'Noto Sans KR', sans-serif;
       overflow: hidden;
+      scroll-snap-type: y mandatory;
+      scroll-behavior: smooth;
       scroll-behavior: smooth;
     }
 
@@ -180,7 +182,7 @@
     </div>
   </div>
 
-  <div id="qrModal" class="modal">
+  <div id="qrModal" class="modal" style="display: none;">
     <span class="qr-close-btn" onclick="hideQR()">×</span>
     <img src="https://github.com/user-attachments/assets/2fb774b3-ba9f-4ce0-84fe-2fa46373edd6" alt="카카오톡 QR" />
   </div>
@@ -196,7 +198,12 @@
       sections[currentPage].scrollIntoView({ behavior: "smooth" });
     });
 
-    const imageMap = {
+    // 아래는 썸네일과 상세 이미지 매핑 설정입니다.
+// 번호를 기준으로 썸네일 1개와 상세 이미지 여러 개를 연결할 수 있습니다.
+// 예시: 0번 썸네일 → [상세이미지1, 상세이미지2]
+// 썸네일 이미지는 배열 내 첫 번째 이미지로 자동 설정됩니다.
+
+const imageMap = {
   0: ["https://github.com/user-attachments/assets/73395fb8-4c5d-44f4-af4b-4ec5e62ed4ed", "https://github.com/user-attachments/assets/2c9bbf65-393b-4529-a4f2-c154993bdf1c"],
   1: ["https://github.com/user-attachments/assets/d8d54030-a77a-4564-9b45-85d5ee551b33", "https://github.com/user-attachments/assets/4df8a1df-2490-4430-b2d8-4e768d4f6403", "https://github.com/user-attachments/assets/550f6e07-7487-454d-9139-6fac33d12d89", "https://github.com/user-attachments/assets/64a4c533-d797-4412-85c8-e1294dcee7ad", "https://github.com/user-attachments/assets/a7b901cf-0933-4b01-b463-cf131232d2b9", "https://github.com/user-attachments/assets/6045fa43-9eca-4304-a85b-670a03242726", "https://github.com/user-attachments/assets/adbfad49-1703-445e-b730-bdfe901d89c6"],
   2: ["https://github.com/user-attachments/assets/4d0ce681-6ff0-4e84-9dc9-4cfaa09945a7"],
